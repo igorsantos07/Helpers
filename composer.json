@@ -2,6 +2,7 @@
     "name": "igorsantos07/helpers",
     "description": "General PHP Helpers for everyday coding",
     "license": "MIT",
+    "keywords": ["helper","helpers","array","date","string","numbers","br","brazil","format"],
     "authors": [
         {
             "name": "Igor Santos",
