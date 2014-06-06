@@ -1,0 +1,13 @@
+{
+    "name": "igorsantos07/helpers",
+    "description": "General PHP Helpers for everyday coding",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Igor Santos",
+            "email": "igorsantos07@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
