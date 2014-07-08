@@ -1,7 +1,7 @@
 {
     "name": "igorsantos07/helpers",
     "description": "General PHP Helpers for everyday coding",
-    "license": "MIT",
+    "license": "BSD-3-Clause",
     "keywords": ["helper","helpers","array","date","string","numbers","br","brazil","format"],
     "authors": [
         {
