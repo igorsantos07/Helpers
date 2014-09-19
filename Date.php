@@ -19,7 +19,7 @@ class Date {
 	 * <li>ISO: AAAA-MM-DD</li>
 	 * <li>US/USA: MM/DD/AAAA</li>
 	 * <li>EU: DD.MM.AAAA</li>
-	 * <li>UNIX: Unix timestamp (formato somente aceito como $to)</li>
+	 * <li>UNIX: Unix timestamp</li>
 	 * </ul>
 	 *
 	 * @author Igor Santos
@@ -31,9 +31,12 @@ class Date {
 	 * @return string Retorna a data formatada, ou nulo se a data gerada for inválida ou ocorrer algum outro erro.
 	 */
 	public static function convert($originalDate, $from = 'BR', $to = 'ISO') {
+		$timestamp = 0;
+		$timeFormat = ' H:i:s';
 
 		//monta um array no formato (0 => 'd', 1 => 'm', 2 => 'Y', '/' => 'sep') para depois ter as chaves trocadas com os valores e tudo isso virar variável
        	switch (strtoupper($from)) {
+	        case 'UNIX' : $timestamp = $originalDate;           break;
 			case 'BR'	: $parts = ['d','m','Y', '/' => 'sep']; break;
 			case 'ISO'	: $parts = ['Y','m','d', '-' => 'sep']; break;
 			case 'US'	:
@@ -46,25 +49,29 @@ class Date {
                	$parts = array_merge($parts); //reorganizando o array
 			break;
 		}
-		//criando as variáveis $m, $d, $Y, $sep
-		$sep = $m = $d = $Y = null;
-       	extract(array_flip($parts));
 
-		$datetime = explode(' ', trim($originalDate));
-		$originalDate = $datetime[0];
-		if (sizeof($datetime) > 1) {
-			$time = explode(':', $datetime[1]);
-			$timeFormat = ' H:i:s';
+		if (!$timestamp) {
+			//criando as variáveis $m, $d, $Y, $sep
+			$sep = $m = $d = $Y = null;
+	        extract(array_flip($parts));
+
+			$datetime = explode(' ', trim($originalDate));
+			$originalDate = $datetime[0];
+			if (sizeof($datetime) > 1) {
+				$time = explode(':', $datetime[1]);
+			}
+			else {
+				$time = [0,0,0];
+				$timeFormat = '';
+			}
+
+			$date = explode($sep, $originalDate);
+
+			if (sizeof($date == 3) && @checkdate($date[$m], $date[$d], $date[$Y]))
+				$timestamp = mktime($time[0], $time[1], $time[2], $date[$m], $date[$d], $date[$Y]);
 		}
-		else {
-			$time = [0,0,0];
-			$timeFormat = '';
-		}
 
-
-		$date = explode($sep, $originalDate);
-       	if (sizeof($date == 3) && @checkdate($date[$m], $date[$d], $date[$Y])) {
-			$timestamp = mktime($time[0], $time[1], $time[2], $date[$m], $date[$d], $date[$Y]);
+		if ($timestamp)
 			switch (strtoupper($to)) {
 				case 'UNIX' : return $timestamp;
 				case 'ISO'	: return date('Y-m-d'.$timeFormat, $timestamp);
@@ -73,10 +80,8 @@ class Date {
 				case 'USA'	: return date('m/d/Y'.$timeFormat, $timestamp);
 				case 'EU'	: return date('d.m.Y'.$timeFormat, $timestamp);
 			}
-       	}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	/**
