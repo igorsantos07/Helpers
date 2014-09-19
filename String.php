@@ -27,6 +27,19 @@ class String {
 	}
 
 	/**
+	 * Turns a slug or key-string into a more humanized text. Not perfect since it does not add accents back or fixes
+	 * perfectly text capitalization, but at least changes underlines into spaces :)
+	 * Example: NOT_REGISTERED = Not registered
+	 * @param $text
+	 * @return string
+	 */
+	public static function humanize($text) {
+		$text = strtr($text, ['_' => ' ']);
+		$text = ucfirst(strtolower($text));
+		return $text;
+	}
+
+	/**
 	 * Remove os acentos da string.
 	 * @author Rafael Soares (código) e Igor Santos (organização em método separado)
 	 * @param string $string
@@ -87,6 +100,15 @@ class String {
 	 */
 	public static function onlyNumbers($string) {
 		return preg_replace('/[^0-9]/', '', $string);
+	}
+
+	/**
+	 * Returns only ASCII letters from the given $string.
+	 * @param $string
+	 * @return string
+	 */
+	public static function onlyLetters($string) {
+		return preg_replace('/[^a-zA-Z]/', '', $string);
 	}
 
 	/**
