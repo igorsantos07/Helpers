@@ -36,7 +36,7 @@ abstract class Arrays {
 	}
 
 	/**
-	 * Erases all the keys from $crowded_array, except the ones that are in the $whitelist, and returns the final array.
+	 * Returns only the key/values from $crowded_array that have their keys in the $whitelist.
 	 * @param array $crowded_array
 	 * @param mixed $whitelist a string with one key, or an array with many
 	 * @return array
@@ -47,7 +47,7 @@ abstract class Arrays {
 	}
 
 	/**
-	 * Erases all the keys from $crowded_array that are in the $blacklist, and returns the final array.
+	 * Returns all key/values from $crowded_array except those with keys in the $blacklist.
 	 * @param array $messy_array
 	 * @param mixed $blacklist a string with one key, or an array with many
 	 * @return array
@@ -70,17 +70,20 @@ abstract class Arrays {
 		$remove = [];
 		switch ($type) {
 			case self::REMOVE_BLACKLIST:
-				foreach ($list as $blacklisted)
-					if (array_key_exists($blacklisted, $array)) $remove[] = $blacklisted;
-				break;
+				foreach ($list as $key) {
+					if (array_key_exists($key, $array)) $remove[] = $key;
+				}
+			break;
+
 			case self::REMOVE_WHITELIST:
-				foreach ($array as $prop => $value)
-					if (!in_array($prop, $list)) $remove[] = $prop;
-				break;
+				foreach (array_keys($array) as $key) {
+					if (!in_array($key, $list)) $remove[] = $key;
+				}
+			break;
 		}
 
-		foreach ($remove as $prop)
-			unset($array[$prop]);
+		foreach ($remove as $key)
+			unset($array[$key]);
 
 		return $array;
 	}
