@@ -31,7 +31,8 @@ class Date {
 	 * @return string Retorna a data formatada, ou nulo se a data gerada for inválida ou ocorrer algum outro erro.
 	 */
 	public static function convert($originalDate, $from = 'BR', $to = 'ISO') {
-		$timestamp = 0;
+		$timestamp  = 0;
+		$parts      = [];
 		$timeFormat = ' H:i:s';
 
 		//monta um array no formato (0 => 'd', 1 => 'm', 2 => 'Y', '/' => 'sep') para depois ter as chaves trocadas com os valores e tudo isso virar variável
@@ -50,7 +51,7 @@ class Date {
 			break;
 		}
 
-		if (!$timestamp) {
+		if (!$timestamp && $parts) {
 			//criando as variáveis $m, $d, $Y, $sep
 			$sep = $m = $d = $Y = null;
 	        extract(array_flip($parts));
@@ -71,7 +72,7 @@ class Date {
 				$timestamp = mktime($time[0], $time[1], $time[2], $date[$m], $date[$d], $date[$Y]);
 		}
 
-		if ($timestamp)
+		if ($timestamp) {
 			switch (strtoupper($to)) {
 				case 'UNIX' : return $timestamp;
 				case 'ISO'	: return date('Y-m-d'.$timeFormat, $timestamp);
@@ -80,6 +81,7 @@ class Date {
 				case 'USA'	: return date('m/d/Y'.$timeFormat, $timestamp);
 				case 'EU'	: return date('d.m.Y'.$timeFormat, $timestamp);
 			}
+		}
 
 		return null;
 	}
